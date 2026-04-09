@@ -1,0 +1,27 @@
+services:
+  frontend-user:
+    build:
+      context: ./frontend-user
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    container_name: frontend-user
+    restart: unless-stopped
+    ports:
+      - "8081:3000"
+    environment:
+      - NODE_ENV=production
+      - NUXT_PUBLIC_SITE_URL=http://localhost:8081
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  app-network:
+    driver: bridge

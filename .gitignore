@@ -1,0 +1,48 @@
+# ===== 通用 =====
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.temp
+.env
+.env.*
+!.env.example
+
+# ===== IDE =====
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ===== Node.js =====
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm/
+.yarn/
+
+# ===== Nuxt =====
+.nuxt/
+.output/
+.nitro/
+.cache/
+dist/
+
+# ===== 构建产物 =====
+build/
+*.local
+
+# ===== 测试 =====
+coverage/
+.nyc_output/
+
+# ===== Docker =====
+docker-compose.override.yml
+
+# ===== 其他 =====
+*.pem
+*.key
+*.crt
