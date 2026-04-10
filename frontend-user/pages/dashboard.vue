@@ -178,9 +178,11 @@ const columns = computed(() => [
     title: '状态',
     width: 100,
     dataKey: 'status',
-    cellRenderer: ({ row }: { row: LogItem }) => {
-      const tag = getStatusTag(row.status)
-      return h(ElTag, { type: tag.type as any, size: 'small' }, () => tag.text)
+    cellRenderer: (params: any) => {
+      const status = params?.row?.status
+      if (!status) return null
+      const tag = getStatusTag(status)
+      return h(ElTag, { type: tag.type as any, size: 'small' }, { default: () => tag.text })
     }
   },
   {
