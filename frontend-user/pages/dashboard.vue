@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, h } from 'vue'
+import { ElTag } from 'element-plus'
 
 interface StatCard {
   title: string
@@ -145,6 +146,50 @@ const getStrokeDashOffset = (value: number, radius: number) => {
   const circumference = 2 * Math.PI * radius
   return circumference * 0.25
 }
+
+const columns = computed(() => [
+  {
+    key: 'id',
+    title: 'ID',
+    width: 80,
+    fixed: 'left' as const,
+    dataKey: 'id'
+  },
+  {
+    key: 'time',
+    title: '时间',
+    width: 180,
+    dataKey: 'time'
+  },
+  {
+    key: 'user',
+    title: '用户',
+    width: 100,
+    dataKey: 'user'
+  },
+  {
+    key: 'action',
+    title: '操作',
+    width: 150,
+    dataKey: 'action'
+  },
+  {
+    key: 'status',
+    title: '状态',
+    width: 100,
+    dataKey: 'status',
+    cellRenderer: ({ row }: { row: LogItem }) => {
+      const tag = getStatusTag(row.status)
+      return h(ElTag, { type: tag.type as any, size: 'small' }, () => tag.text)
+    }
+  },
+  {
+    key: 'ip',
+    title: 'IP地址',
+    width: 140,
+    dataKey: 'ip'
+  }
+])
 </script>
 
 <template>
@@ -312,25 +357,13 @@ const getStrokeDashOffset = (value: number, radius: number) => {
           <h3 class="table-title">操作日志</h3>
           <el-button type="primary" size="small">导出日志</el-button>
         </div>
-        <el-table
+        <el-table-v2
+          :columns="columns"
           :data="logs"
-          height="400"
-          style="width: 100%"
-          v-loading="false"
-        >
-          <el-table-column prop="id" label="ID" width="80" fixed />
-          <el-table-column prop="time" label="时间" width="180" />
-          <el-table-column prop="user" label="用户" width="100" />
-          <el-table-column prop="action" label="操作" min-width="150" />
-          <el-table-column prop="status" label="状态" width="100">
-            <template #default="{ row }">
-              <el-tag :type="getStatusTag(row.status).type" size="small">
-                {{ getStatusTag(row.status).text }}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column prop="ip" label="IP地址" width="140" />
-        </el-table>
+          :height="400"
+          :width="1000"
+          fixed
+        />
       </div>
     </div>
   </div>
@@ -639,6 +672,25 @@ const getStrokeDashOffset = (value: number, radius: number) => {
 
 :deep(.el-table--striped .el-table__body tr.el-table__row--striped td) {
   background: var(--color-bg-secondary);
+}
+
+:deep(.el-table-v2) {
+  --el-table-v2-bg-color: transparent;
+  --el-table-v2-row-bg-color: transparent;
+  --el-table-v2-header-bg-color: var(--color-bg-secondary);
+  --el-table-v2-row-hover-bg-color: var(--color-bg-secondary);
+  --el-table-v2-border-color: var(--color-border);
+  --el-table-v2-text-color: var(--color-text-primary);
+  --el-table-v2-header-text-color: var(--color-text-secondary);
+}
+
+:deep(.el-table-v2__header-cell) {
+  background: var(--color-bg-secondary) !important;
+  font-weight: 600;
+}
+
+:deep(.el-table-v2__cell) {
+  border-bottom: 1px solid var(--color-border);
 }
 
 @media (max-width: 1200px) {
